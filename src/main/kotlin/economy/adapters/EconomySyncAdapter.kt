@@ -5,6 +5,7 @@ import fi.sulku.hytale.economy.PlayerBalance
 import fi.sulku.hytale.economy.PlayerEconomy
 import java.math.BigDecimal
 import java.util.UUID
+import java.util.concurrent.CompletableFuture
 
 /**
  * Wrapper class for Economy.
@@ -24,13 +25,18 @@ class EconomySyncAdapter(private val economy: PlayerEconomy) {
 
     fun getBalance(uuid: UUID): BigDecimal = economy.getBalance(uuid).get()
 
+    fun setBalance(uuid: UUID, amount: BigDecimal): EconomyResult = economy.setBalance(uuid, amount).get()
+
     fun has(uuid: UUID, amount: BigDecimal): Boolean = economy.has(uuid, amount).get()
 
     fun withdraw(uuid: UUID, amount: BigDecimal): EconomyResult = economy.withdraw(uuid, amount).get()
 
     fun deposit(uuid: UUID, amount: BigDecimal): EconomyResult = economy.deposit(uuid, amount).get()
 
+    fun transfer(from: UUID, to: UUID, amount: BigDecimal): EconomyResult = economy.transfer(from, to, amount).get()
+
     fun getAccounts(): List<PlayerBalance> = economy.getAccounts().get()
 
     fun getTopAccounts(limit: Int, page: Int): List<PlayerBalance> = economy.getTopAccounts(limit, page).get()
+
 }

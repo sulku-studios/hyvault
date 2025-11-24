@@ -5,7 +5,7 @@ import fi.sulku.hytale.economy.PlayerBalance
 import fi.sulku.hytale.economy.PlayerEconomy
 import kotlinx.coroutines.future.await
 import java.math.BigDecimal
-import java.util.UUID
+import java.util.*
 
 /**
  * This wrapper class for kotlin users
@@ -25,11 +25,15 @@ class EconomySuspendAdapter(private val economy: PlayerEconomy) {
 
     suspend fun getBalance(uuid: UUID): BigDecimal = economy.getBalance(uuid).await()
 
+    suspend fun setBalance(uuid: UUID, amount: BigDecimal): EconomyResult = economy.setBalance(uuid, amount).await()
+
     suspend fun has(uuid: UUID, amount: BigDecimal): Boolean = economy.has(uuid, amount).await()
 
     suspend fun withdraw(uuid: UUID, amount: BigDecimal): EconomyResult = economy.withdraw(uuid, amount).await()
 
     suspend fun deposit(uuid: UUID, amount: BigDecimal): EconomyResult = economy.deposit(uuid, amount).await()
+
+    suspend fun transfer(from: UUID, to: UUID, amount: BigDecimal): EconomyResult = economy.transfer(from, to, amount).await()
 
     suspend fun getAccounts(): List<PlayerBalance> = economy.getAccounts().await()
 
