@@ -7,7 +7,7 @@ plugins {
 
 allprojects {
     group = "fi.sulku.hytale"
-    version = "1.10-SNAPSHOT"
+    version = "0.1.0-SNAPSHOT"
 
     repositories {
         mavenCentral()
