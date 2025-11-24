@@ -1,0 +1,9 @@
+# Warning todo remove from api? up to implementations?
+# Plugin throws exception if multiple economies detected and multi economy is false
+allow-multiple-economies: false
+# If multi economy is enabled it will default to this
+# If multi economy is enabled and there is multiple economies and
+# Default economy used
+default-economy: hyconomy
+
+# singular, plural, rouding
