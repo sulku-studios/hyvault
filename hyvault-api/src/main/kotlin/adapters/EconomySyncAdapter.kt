@@ -1,11 +1,10 @@
-package fi.sulku.hytale.economy.adapters
+package fi.sulku.hytale.economy.api.adapters
 
-import fi.sulku.hytale.economy.EconomyResult
-import fi.sulku.hytale.economy.PlayerBalance
-import fi.sulku.hytale.economy.PlayerEconomy
+import fi.sulku.hytale.economy.api.EconomyResult
+import fi.sulku.hytale.economy.api.PlayerBalance
+import fi.sulku.hytale.economy.api.PlayerEconomy
 import java.math.BigDecimal
-import java.util.UUID
-import java.util.concurrent.CompletableFuture
+import java.util.*
 
 /**
  * Wrapper class for Economy.

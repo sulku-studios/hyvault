@@ -1,7 +1,6 @@
-package fi.sulku.hytale.economy
+package fi.sulku.hytale.economy.api
 
-import fi.sulku.hytale.economy.adapters.EconomySuspendAdapter
-import fi.sulku.hytale.economy.adapters.EconomySyncAdapter
+import fi.sulku.hytale.economy.api.adapters.EconomySyncAdapter
 import java.math.BigDecimal
 import java.util.*
 import java.util.concurrent.CompletableFuture
@@ -158,15 +157,6 @@ interface PlayerEconomy {
      * @return EconomySync
      */
     fun asSync(): EconomySyncAdapter = EconomySyncAdapter(this)
-
-    // Support for kotlin wrapper to have suspend functions
-    /**
-     * Wrap the class with suspend methods, visible for kotlin users
-     * @see fi.sulku.hytale.economy.adapters.EconomySuspendAdapter
-     * @return EconomySuspend
-     */
-    @JvmSynthetic
-    fun asCoroutine(): EconomySuspendAdapter = EconomySuspendAdapter(this)
 }
 
 /**

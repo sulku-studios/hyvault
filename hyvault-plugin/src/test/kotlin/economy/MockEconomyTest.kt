@@ -1,9 +1,10 @@
-package playereconomy
+package economy
 
-import fi.sulku.hytale.economy.PlayerBalance
-import fi.sulku.hytale.economy.PlayerEconomy
-import fi.sulku.hytale.economy.ResultType
-import fi.sulku.hytale.economy.adapters.EconomySuspendAdapter
+import fi.sulku.hytale.economy.api.PlayerBalance
+import fi.sulku.hytale.economy.api.PlayerEconomy
+import fi.sulku.hytale.economy.api.ResultType
+import fi.sulku.hytale.economy.api.adapters.EconomySuspendAdapter
+import fi.sulku.hytale.economy.api.adapters.asCoroutine
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test

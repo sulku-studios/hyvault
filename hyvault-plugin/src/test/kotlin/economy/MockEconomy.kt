@@ -1,9 +1,9 @@
-package playereconomy
+package economy
 
-import fi.sulku.hytale.economy.EconomyResult
-import fi.sulku.hytale.economy.PlayerBalance
-import fi.sulku.hytale.economy.PlayerEconomy
-import fi.sulku.hytale.economy.ResultType
+import fi.sulku.hytale.economy.api.EconomyResult
+import fi.sulku.hytale.economy.api.PlayerBalance
+import fi.sulku.hytale.economy.api.PlayerEconomy
+import fi.sulku.hytale.economy.api.ResultType
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob

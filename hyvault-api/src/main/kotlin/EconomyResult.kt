@@ -1,4 +1,4 @@
-package fi.sulku.hytale.economy
+package fi.sulku.hytale.economy.api
 
 import java.math.BigDecimal
 

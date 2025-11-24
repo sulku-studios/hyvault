@@ -1,8 +1,8 @@
-package fi.sulku.hytale.economy.adapters
+package fi.sulku.hytale.economy.api.adapters
 
-import fi.sulku.hytale.economy.EconomyResult
-import fi.sulku.hytale.economy.PlayerBalance
-import fi.sulku.hytale.economy.PlayerEconomy
+import fi.sulku.hytale.economy.api.EconomyResult
+import fi.sulku.hytale.economy.api.PlayerBalance
+import fi.sulku.hytale.economy.api.PlayerEconomy
 import kotlinx.coroutines.future.await
 import java.math.BigDecimal
 import java.util.*
@@ -39,3 +39,11 @@ class EconomySuspendAdapter(private val economy: PlayerEconomy) {
 
     suspend fun getTopAccounts(limit: Int, page: Int): List<PlayerBalance> = economy.getTopAccounts(limit, page).await()
 }
+
+/**
+ * Wrap the class with suspend methods, visible for kotlin users
+ * @see fi.sulku.hytale.economy.adapters.EconomySuspendAdapter
+ * @return EconomySuspend
+ */
+@JvmSynthetic
+fun PlayerEconomy.asCoroutine(): EconomySuspendAdapter = EconomySuspendAdapter(this)
