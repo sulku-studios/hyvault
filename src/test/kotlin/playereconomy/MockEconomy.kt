@@ -38,6 +38,21 @@ class EconomyPlayer(override val id: String = "hyconomy") : PlayerEconomy {
 
     override fun getBalance(uuid: UUID): CompletableFuture<BigDecimal> = scope.future { balances[uuid]!! }
 
+    override fun setBalance(uuid: UUID, amount: BigDecimal): CompletableFuture<EconomyResult> {
+        return transaction(
+            uuid,
+            amount,
+            validator = { _ ->
+                if (amount > BigDecimal.valueOf(Long.MAX_VALUE) - amount) {
+                    "Amount would exceed maximum balance"
+                } else {
+                    null
+                }
+            },
+            calculator = { _ -> amount }
+        )
+    }
+
     override fun has(uuid: UUID, amount: BigDecimal): CompletableFuture<Boolean> =
         scope.future { getBalance(uuid).await() >= amount }
 
@@ -101,7 +116,15 @@ class EconomyPlayer(override val id: String = "hyconomy") : PlayerEconomy {
         )
     }
 
-    private suspend fun hasPreTransactionError(
+    override fun transfer(
+        from: UUID,
+        to: UUID,
+        amount: BigDecimal
+    ): CompletableFuture<EconomyResult> = scope.future {
+        return@future EconomyResult(ResultType.FAILURE, errorMessage = "Not Implemented")
+    }
+
+    private fun transaction(
         uuid: UUID,
         amount: BigDecimal,
     ): EconomyResult? {

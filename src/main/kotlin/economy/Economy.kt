@@ -93,6 +93,15 @@ interface PlayerEconomy {
     fun getBalance(uuid: UUID): CompletableFuture<BigDecimal>
 
     /**
+     * Sets the user balance.
+     *
+     * @param uuid of the player
+     *
+     * @return future for economy result
+     */
+    fun setBalance(uuid: UUID, amount: BigDecimal): CompletableFuture<EconomyResult>
+
+    /**
      * @param amount to deposit
      * @param uuid of the player
      *
@@ -107,6 +116,17 @@ interface PlayerEconomy {
      * @return future for economy result
      */
     fun withdraw(uuid: UUID, amount: BigDecimal): CompletableFuture<EconomyResult>
+
+    /**
+     * Transfer amount from 1 player to another.
+     *
+     * @param from user
+     * @param to user
+     * @param amount to transfer
+     *
+     * @return future for economy result
+     */
+    fun transfer(from: UUID, to: UUID, amount: BigDecimal): CompletableFuture<EconomyResult>
 
     /**
      *
