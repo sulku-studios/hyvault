@@ -29,7 +29,7 @@ dependencies {
 </dependency>
 ```
 
-## 🎯 Usage
+## Usage
 
 ### For Plugin Developers
 
@@ -343,7 +343,7 @@ public class YourEconomyPlugin extends Plugin {
 }
 ```
 
-## 🔄 Adapters
+## Adapters
 
 ### `EconomySuspendAdapter`
 Converts `PlayerEconomy` to use Kotlin suspend functions for coroutine support.
@@ -351,6 +351,6 @@ Converts `PlayerEconomy` to use Kotlin suspend functions for coroutine support.
 ### `EconomySyncAdapter`
 Provides blocking/synchronous wrappers for economy methods. Useful when you need synchronous behavior but be careful not to block the main thread.
 
-## 📄 License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](../LICENSE) file for details.
