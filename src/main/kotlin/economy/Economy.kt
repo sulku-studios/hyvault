@@ -26,7 +26,7 @@ interface PlayerEconomy {
 
     //Todo
     /**
-     * Icon for the currency
+     * Icon for the currency.
      */
     // <stacksize, image path>
     // val stackIcons: Map<Int, String>
@@ -46,8 +46,7 @@ interface PlayerEconomy {
     val currencySingular: String
 
     /**
-     * Decides how many decimal points will be in the currency
-     * since the plugin uses longs instead of doubles to have accurate currency rounding
+     * Decides how many decimal points will be in the currency.
      * Example:
      * User has currency amount of 234
      * fractionalDigits = 2
@@ -66,17 +65,16 @@ interface PlayerEconomy {
     fun format(amount: BigDecimal): String
 
     /**
-     * Tries to create account for the player
+     * Tries to create account for the player.
      *
      * @param uuid of the player
      * @return future with true/false
      */
     fun createAccount(uuid: UUID): CompletableFuture<Boolean>
-    //todo json economy?
 
     /**
-     * Checks if the user has account on the server yet
-     * Should return true if player has been on the server
+     * Checks if the user has account on the server yet.
+     * Should return true if player has been on the server.
      *
      * @param uuid of the player
      *@return future with true/false
@@ -84,7 +82,7 @@ interface PlayerEconomy {
     fun hasAccount(uuid: UUID): CompletableFuture<Boolean>
 
     /**
-     * Gets the balance of the player
+     * Gets the balance of the player.
      *
      *  @param uuid of the player
      *
@@ -110,6 +108,8 @@ interface PlayerEconomy {
     fun deposit(uuid: UUID, amount: BigDecimal): CompletableFuture<EconomyResult>
 
     /**
+     * Withdraw amount from the player.
+     *
      * @param amount to withdraw
      * @param uuid of the player
      *
