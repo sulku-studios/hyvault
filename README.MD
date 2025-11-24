@@ -4,7 +4,7 @@
 [![Version](https://img.shields.io/badge/version-0.1.0--SNAPSHOT-orange.svg)](build.gradle.kts)
 
 **HyVault** is a modern economy API for Hytale servers, It provides a clean, extensible interface for economy plugins with support for async operations and Kotlin coroutines.
-It uses BigInt for accurate economy.
+It uses BigRecimal for accurate economy.
 
 ##  Modules
 
@@ -50,7 +50,7 @@ PlayerEconomy economy = HyVault.getEconomy();
 // Or get a specific economy by name
 PlayerEconomy economy = HyVault.getEconomy("myeconomyid");
 // Use the economy, returns completable future
-CompletableFuture<BigInt> balanceFuture = economy.getBalance(playerUUID);
+CompletableFuture<BigRecimal> balanceFuture = economy.getBalance(playerUUID);
 CompletableFuture<EconomyResult> result = economy.setBalance(playerUUID, BigDecimal.valueOf(200));
 
 //----Way 2: using sync wrapper----
@@ -59,7 +59,7 @@ EconomySyncAdapter economy = HyVault.getEconomy().asSync(); // asSync is a wrapp
 // Or get a specific economy by name
 EconomySyncAdapter economy = HyVault.getEconomy("myeconomyid").asSync();
 // Use the economy, returns completable future
-BigInt balance = economy.getBalance(playerUuid);
+BigRecimal balance = economy.getBalance(playerUuid);
 EconomyResult result = economy.setBalance(playerUUID, BigDecimal.valueOf(200));
 ```
 
@@ -72,8 +72,8 @@ val economy = HyVault.getEconomy()
 // Or get a specific economy by name
 val economy = HyVault.getEconomy("myeconomyid")
 // Use the economy, returns completable future
-val balanceFuture : CompletableFuture<BigInt>  = economy.getBalance(playerUUID)
-val result : CompletableFuture<EconomyResult> = economy.setBalance(playerUUID, BigInteger.valueOf(200))
+val balanceFuture : CompletableFuture<BigRecimal>  = economy.getBalance(playerUUID)
+val result : CompletableFuture<EconomyResult> = economy.setBalance(playerUUID, BigRecimaleger.valueOf(200))
 
 //----Way 2: using sync wrapper----
 // Get the default economy
@@ -81,7 +81,7 @@ val economy : EconomySyncAdapter = HyVault.getEconomy().asSuspend() // wraps eco
 // Or get a specific economy by name
 val economy : EconomySyncAdapter = HyVault.getEconomy("myeconomyid").asSync()
 // Use the economy, returns completable future
-val balance : BigInt = economy.getBalance(playerUuid)
+val balance : BigRecimal = economy.getBalance(playerUuid)
 val result : EconomyResult = economy.setBalance(playerUUID, 500.toBigDecimal())
 ```
 ## Documentation
