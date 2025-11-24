@@ -34,7 +34,7 @@ class EconomyPlayer(override val id: String = "hyconomy") : PlayerEconomy {
         scope.future { balances.map { PlayerBalance(it.key, it.value) } }
 
     override fun getTopAccounts(limit: Int, page: Int): CompletableFuture<List<PlayerBalance>> =
-        scope.future { balances.map { PlayerBalance(it.key, it.value) }.sortedBy { it.balance } }
+        scope.future { balances.map { PlayerBalance(it.key, it.value) }.sortedByDescending { it.balance } }
 
     override fun getBalance(uuid: UUID): CompletableFuture<BigDecimal> = scope.future { balances[uuid]!! }
 
