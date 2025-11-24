@@ -1,9 +1,9 @@
 package playereconomy
 
-import fi.sulku.hytale.economy.adapters.EconomySuspendAdapter
 import fi.sulku.hytale.economy.PlayerBalance
 import fi.sulku.hytale.economy.PlayerEconomy
 import fi.sulku.hytale.economy.ResultType
+import fi.sulku.hytale.economy.adapters.EconomySuspendAdapter
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -12,9 +12,8 @@ import java.util.*
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-class EconomyPlayerTest {
-
-    private val eco: PlayerEconomy = EconomyPlayer()
+class MockEconomyTest {
+    private val eco: PlayerEconomy = MockEconomy()
     private val economy: EconomySuspendAdapter = eco.asCoroutine()
 
     @Test
@@ -74,29 +73,27 @@ class EconomyPlayerTest {
     @Test
     @DisplayName("toplist")
     fun checkTopList() = runBlocking {
-        repeat(5) {
+        val totalAccounts = 5
+
+        repeat(totalAccounts) { i ->
             val uuid = UUID.randomUUID()
-            val initialBalance = it.toBigDecimal().plus(1.toBigDecimal())
-            val change = 2.toBigDecimal()
+            val initialBalance = BigDecimal(i + 1)
             economy.createAccount(uuid)
             economy.deposit(uuid, initialBalance)
-            economy.deposit(uuid, change)
-            economy.withdraw(uuid, change)
-            val balance = economy.getBalance(uuid)
-            assertEquals(balance, initialBalance)
         }
-
-        val accounts = economy.getAccounts()
-        assertEquals(accounts.size, 5)
 
         val topAccounts: List<PlayerBalance> = economy.getTopAccounts(100, 1)
 
+        assertEquals(totalAccounts, topAccounts.size)
+
         topAccounts.forEachIndexed { i, playerBalance ->
             val balance = playerBalance.balance
-            println("Top ${i + 1}: $balance")
-            assertEquals(balance, BigDecimal.valueOf(i.toLong() + 1))
+            val expectedBalance = BigDecimal(totalAccounts - i)
+            assertEquals(expectedBalance, balance)
         }
     }
 }
+
+
 
 

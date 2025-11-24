@@ -14,7 +14,7 @@ import java.util.*
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.ConcurrentHashMap
 
-class EconomyPlayer(override val id: String = "hyconomy") : PlayerEconomy {
+class MockEconomy(override val id: String = "hyconomy") : PlayerEconomy {
     override val isEnabled: Boolean = true
     override val name: String = "Hyconomy"
     override val currencyPlural: String = "€"
@@ -24,9 +24,7 @@ class EconomyPlayer(override val id: String = "hyconomy") : PlayerEconomy {
 
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
-    companion object {
-        private val balances: MutableMap<UUID, BigDecimal> = ConcurrentHashMap()
-    }
+    private val balances: MutableMap<UUID, BigDecimal> = ConcurrentHashMap()
 
     override fun hasAccount(uuid: UUID): CompletableFuture<Boolean> = scope.future { balances.containsKey(uuid) }
 
@@ -63,56 +61,36 @@ class EconomyPlayer(override val id: String = "hyconomy") : PlayerEconomy {
     override fun withdraw(
         uuid: UUID,
         amount: BigDecimal
-    ): CompletableFuture<EconomyResult> = scope.future {
-        val hasValidAmount: EconomyResult? = hasPreTransactionError(uuid, amount)
-        if (hasValidAmount != null) return@future hasValidAmount
-
-        val before = getBalance(uuid).await()
-
-        if (before <= amount) {
-            return@future EconomyResult(
-                status = ResultType.FAILURE,
-                amount = amount,
-                errorMessage = "Player does not have $amount he has $before"
-            )
-        }
-
-        val after = before - amount
-        balances[uuid] = after
-
-        return@future EconomyResult(
-            status = ResultType.SUCCESS,
-            amount = amount,
-            balanceBefore = before,
-            balanceAfter = after
+    ): CompletableFuture<EconomyResult> {
+        return transaction(
+            uuid,
+            amount,
+            validator = { current ->
+                if (current < amount) {
+                    "Insufficient funds: Has $current, needs $amount"
+                } else {
+                    null
+                }
+            },
+            calculator = { current -> current - amount }
         )
     }
 
     override fun deposit(
         uuid: UUID,
         amount: BigDecimal
-    ): CompletableFuture<EconomyResult> = scope.future {
-        val hasValidAmount: EconomyResult? = hasPreTransactionError(uuid, amount)
-        if (hasValidAmount != null) return@future hasValidAmount
-
-        val before = getBalance(uuid).await()
-
-        // Prevent going over the max amount
-        if (before > BigDecimal.valueOf(Long.MAX_VALUE) - amount) {  // todo maxvalue to config?
-            return@future EconomyResult(
-                status = ResultType.FAILURE,
-                errorMessage = "Deposit would exceed maximum balance"
-            )
-        }
-
-        val after = before + amount
-        balances[uuid] = after
-
-        return@future EconomyResult(
-            status = ResultType.SUCCESS,
-            amount = amount,
-            balanceBefore = before,
-            balanceAfter = after
+    ): CompletableFuture<EconomyResult> {
+        return transaction(
+            uuid,
+            amount,
+            validator = { current ->
+                if (current > BigDecimal.valueOf(Long.MAX_VALUE) - amount) {  // todo maxvalue to config?
+                    "Deposit would exceed maximum balance"
+                } else {
+                    null
+                }
+            },
+            calculator = { current -> current + amount }
         )
     }
 
@@ -127,18 +105,42 @@ class EconomyPlayer(override val id: String = "hyconomy") : PlayerEconomy {
     private fun transaction(
         uuid: UUID,
         amount: BigDecimal,
-    ): EconomyResult? {
+        validator: (BigDecimal) -> String?,
+        calculator: (BigDecimal) -> BigDecimal
+    ): CompletableFuture<EconomyResult> = scope.future {
+        var result: EconomyResult? = null
         if (amount < BigDecimal.ZERO) {
-            return EconomyResult(
-                status = ResultType.FAILURE,
-                errorMessage = "Negative amounts are not allowed"
-            )
-        } else if (!hasAccount(uuid).await()) {
-            return EconomyResult(
-                status = ResultType.FAILURE,
-                errorMessage = "Account does not exist for $uuid"
-            )
+            return@future EconomyResult(status = ResultType.FAILURE, errorMessage = "Negative amounts are not allowed")
         }
-        return null
+
+        balances.compute(uuid) { _, currentBalance ->
+            if (currentBalance == null) {
+                result = EconomyResult(
+                    status = ResultType.FAILURE,
+                    errorMessage = "Account does not exist for $uuid"
+                )
+                return@compute null
+            }
+
+            val errorMsg = validator(currentBalance)
+
+            if (errorMsg != null) {
+                result = EconomyResult(
+                    status = ResultType.FAILURE,
+                    errorMessage = errorMsg
+                )
+                return@compute currentBalance
+            }
+            val newBalance = calculator(currentBalance)
+
+            result = EconomyResult(
+                status = ResultType.SUCCESS,
+                amount = amount,
+                balanceBefore = currentBalance,
+                balanceAfter = newBalance
+            )
+            return@compute newBalance
+        }
+        return@future result!!
     }
 }
