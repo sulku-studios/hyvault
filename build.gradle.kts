@@ -1,7 +1,8 @@
 plugins {
-    kotlin("jvm") version "2.2.21" apply false
-    id("com.gradleup.shadow") version "9.0.0-beta15" apply false
-    kotlin("plugin.serialization") version "2.2.21" apply false
+    val kotlinVer = "2.3.0-RC"
+    kotlin("jvm") version kotlinVer apply false
+    id("com.gradleup.shadow") version "9.2.2" apply false
+    kotlin("plugin.serialization") version kotlinVer apply false
 }
 
 allprojects {

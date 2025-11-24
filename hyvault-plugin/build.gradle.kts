@@ -1,5 +1,3 @@
-import com.github.jengelman.gradle.plugins.shadow.ShadowJavaPlugin.Companion.shadowJar
-
 plugins {
     kotlin("jvm")
     `maven-publish`
@@ -10,7 +8,7 @@ plugins {
 description = "HyVault Core Plugin"
 
 kotlin {
-    jvmToolchain(21)
+    jvmToolchain(25)
 }
 
 tasks.test {
