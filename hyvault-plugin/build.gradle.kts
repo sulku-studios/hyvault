@@ -1,33 +1,36 @@
 plugins {
-    kotlin("jvm")
-    `maven-publish`
-    id("com.gradleup.shadow")
-    kotlin("plugin.serialization")
+    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.shadow)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 description = "HyVault Core Plugin"
 
-kotlin {
-    jvmToolchain(25)
-}
-
-tasks.test {
-    useJUnitPlatform()
-}
-
 dependencies {
-    testImplementation(kotlin("test"))
     implementation(project(":hyvault-api"))
-    implementation("com.charleskorn.kaml:kaml:0.104.0")
-    
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.9.0")
+    implementation(libs.kaml)
+    testImplementation(libs.coroutines.core)
+    testImplementation(libs.coroutines.jdk8)
 }
 
 tasks {
     shadowJar {
         archiveClassifier.set("")
+        
+        // Relocate dependencies to avoid conflicts
         relocate("com.charleskorn.kaml", "fi.sulku.hytale.libs.kaml")
+        relocate("kotlinx.serialization", "fi.sulku.hytale.libs.kotlinx.serialization")
+        relocate("okio", "fi.sulku.hytale.libs.okio")
+        relocate("org.snakeyaml.engine", "fi.sulku.hytale.libs.snakeyaml")
+        
+        // Exclude unnecessary files
+        exclude("META-INF/maven/**")
+        exclude("META-INF/*.txt")
+        exclude("META-INF/proguard/**")
+        exclude("META-INF/com.android.tools/**")
+        exclude("**/*.kotlin_builtins")
+        
+        // Minimize - only include used classes
         minimize()
     }
 
@@ -36,13 +39,11 @@ tasks {
     }
 }
 
-publishing {
-    publications {
-        create<MavenPublication>("maven") {
+afterEvaluate {
+    publishing {
+        publications.named<MavenPublication>("maven") {
+            artifacts.clear()
             artifact(tasks.shadowJar)
-            groupId = project.group.toString()
-            artifactId = "hyvault-plugin"
-            version = project.version.toString()
         }
     }
 }

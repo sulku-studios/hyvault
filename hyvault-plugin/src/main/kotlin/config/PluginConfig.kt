@@ -5,8 +5,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class PluginConfig(
-    // NOTE: Must be 'var' to allow runtime changes
-
     @SerialName("allow-multiple-economies")
     var allowMultiple: Boolean = true,
 

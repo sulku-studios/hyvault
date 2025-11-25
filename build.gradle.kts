@@ -1,8 +1,9 @@
+import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
+
 plugins {
-    val kotlinVer = "2.3.0-RC"
-    kotlin("jvm") version kotlinVer apply false
-    id("com.gradleup.shadow") version "9.2.2" apply false
-    kotlin("plugin.serialization") version kotlinVer apply false
+    alias(libs.plugins.kotlin.jvm) apply false
+    alias(libs.plugins.shadow) apply false
+    alias(libs.plugins.kotlin.serialization) apply false
 }
 
 allprojects {
@@ -12,5 +13,32 @@ allprojects {
     repositories {
         mavenCentral()
         maven("https://jitpack.io")
+    }
+}
+
+subprojects {
+    apply(plugin = "org.jetbrains.kotlin.jvm")
+    apply(plugin = "maven-publish")
+
+    configure<KotlinJvmProjectExtension> {
+        jvmToolchain(25)
+    }
+
+    tasks.withType<Test> {
+        useJUnitPlatform()
+    }
+
+    dependencies {
+        add("testImplementation", kotlin("test"))
+    }
+
+    afterEvaluate {
+        configure<PublishingExtension> {
+            publications {
+                create<MavenPublication>("maven") {
+                    from(components["java"])
+                }
+            }
+        }
     }
 }

@@ -84,7 +84,7 @@ class MockEconomy(override val id: String = "hyconomy") : PlayerEconomy {
             uuid,
             amount,
             validator = { current ->
-                if (current > BigDecimal.valueOf(Long.MAX_VALUE) - amount) {  // todo maxvalue to config?
+                if (current > BigDecimal.valueOf(Long.MAX_VALUE) - amount) {
                     "Deposit would exceed maximum balance"
                 } else {
                     null

@@ -162,4 +162,4 @@ interface PlayerEconomy {
 /**
  * Helper object for listing balances used in getTopAccounts and getAccounts
  */
-data class PlayerBalance(val uuid: UUID, val balance: BigDecimal) // todo remove?
+data class PlayerBalance(val uuid: UUID, val balance: BigDecimal)
