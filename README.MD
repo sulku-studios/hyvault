@@ -92,7 +92,7 @@ val result : EconomyResult = economy.setBalance(playerUUID, 500.toBigDecimal())
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the GNU GENERAL PUBLIC License - see the [LICENSE](LICENSE) file for details.
 
 ## Contributing
 

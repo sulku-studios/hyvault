@@ -353,4 +353,4 @@ Provides blocking/synchronous wrappers for economy methods. Useful when you need
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](../LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
