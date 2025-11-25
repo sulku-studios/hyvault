@@ -11,18 +11,18 @@ import java.math.BigDecimal
  * @param balanceAfter the transaction
  * @param errorMessage of the failed transaction
  */
-data class EconomyResult(
-    val status: ResultType,
-    val amount: BigDecimal? = null,
-    val balanceBefore: BigDecimal? = null,
-    val balanceAfter: BigDecimal? = null,
+data class EconomyResult<T>(
+    val success: Boolean,
     val errorMessage: String = "",
+    val value: T? = null
 )
 
-/**
- * Result type of the economy action
- */
-enum class ResultType {
-    SUCCESS,
-    FAILURE
-}
+data class BalanceChange(
+    val old: BigDecimal,
+    val new: BigDecimal
+)
+
+data class Transfer(
+    val from: BalanceChange,
+    val to: BalanceChange
+)
