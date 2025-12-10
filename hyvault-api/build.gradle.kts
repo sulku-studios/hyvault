@@ -5,4 +5,5 @@ plugins {
 dependencies {
     compileOnly(libs.coroutines.core)
     compileOnly(libs.coroutines.jdk8)
+    implementation(libs.kotlin.logging.jvm)
 }

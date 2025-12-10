@@ -8,12 +8,12 @@ import java.util.concurrent.ConcurrentHashMap
 object HyVault {
 
     private val economies = ConcurrentHashMap<String, PlayerEconomy>()
+
     private var defaultEconomy: PlayerEconomy? = null
-    private var preferredDefaultId: String? = null
+    var preferredDefaultId: String? = null
 
     @JvmField
     var allowMultiplePlayerEconomies: Boolean = true
-
 
     /**
      * Called by hyvault-plugin onEnable to set the preferred ID from config.
@@ -31,9 +31,11 @@ object HyVault {
      * Register a new economy provider.
      *
      * @param provider to register.
+     * @return the wrapped economy instance (with all middlewares applied).
+     *         Use this returned instance if you need to cache the economy.
      */
     @JvmStatic
-    fun registerEconomy(provider: PlayerEconomy) {
+    fun registerEconomy(provider: PlayerEconomy): PlayerEconomy  {
         // If multiple economies are disabled, wipe the previous ones
         if (!allowMultiplePlayerEconomies) {
             if (economies.isNotEmpty()) {
@@ -43,16 +45,20 @@ object HyVault {
             }
         }
 
-        // Warn if overwriting
         if (economies.containsKey(provider.id)) {
             println("[HyVault] Warning: Overwriting existing economy with ID: ${provider.id}")
         }
 
-        economies[provider.id] = provider
-        println("[HyVault] Registered economy provider: '${provider.id}' (${provider.name})")
+        val finalProvider = provider
+        println("[HyVault-DEBUG] Registering economy '${provider.id}', original type: ${provider::class.java.simpleName}")
 
-        // Recalculate new default
+        economies[finalProvider.id] = finalProvider
+
+        println("[HyVault] Registered economy provider: '${finalProvider.id}' (${finalProvider.name})")
+
         refreshDefault()
+
+        return finalProvider
     }
 
     /**
@@ -112,11 +118,16 @@ object HyVault {
 
         if (id != null) {
             val specific = economies[id]
-            if (specific != null) return specific
+            if (specific != null) {
+                println("[HyVault-DEBUG] getEconomy('$id') returning instance ${System.identityHashCode(specific)} of type ${specific::class.java.simpleName}")
+                return specific
+            }
             println("[HyVault] Warning: Requested economy '$id' not found. Falling back to default.")
         }
         // If economy not found with the name take any it can find
-        return defaultEconomy ?: economies.values.first()
+        val result = defaultEconomy ?: economies.values.first()
+        println("[HyVault-DEBUG] getEconomy(${id ?: "null"}) returning default instance ${System.identityHashCode(result)} of type ${result::class.java.simpleName}")
+        return result
     }
 
     /**

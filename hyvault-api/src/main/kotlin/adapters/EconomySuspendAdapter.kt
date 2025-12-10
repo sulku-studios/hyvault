@@ -1,10 +1,6 @@
 package fi.sulku.hytale.economy.api.adapters
 
-import fi.sulku.hytale.economy.api.EconomyResult
-import fi.sulku.hytale.economy.api.PlayerBalance
-import fi.sulku.hytale.economy.api.PlayerEconomy
-import fi.sulku.hytale.economy.api.BalanceChange
-import fi.sulku.hytale.economy.api.Transfer
+import fi.sulku.hytale.economy.api.*
 import kotlinx.coroutines.future.await
 import java.math.BigDecimal
 import java.util.*
@@ -21,23 +17,23 @@ class EconomySuspendAdapter(private val economy: PlayerEconomy) {
 
     fun format(amount: BigDecimal): String = economy.format(amount)
 
-    suspend fun createAccount(uuid: UUID): EconomyResult<Boolean> = economy.createAccount(uuid).await()
+    suspend fun createAccount(uuid: UUID): Boolean = economy.createAccount(uuid).await()
 
-    suspend fun hasAccount(uuid: UUID): EconomyResult<Boolean> = economy.hasAccount(uuid).await()
+    suspend fun hasAccount(uuid: UUID): Boolean = economy.hasAccount(uuid).await()
 
-    suspend fun getBalance(uuid: UUID): EconomyResult<BigDecimal> = economy.getBalance(uuid).await()
+    suspend fun getBalance(uuid: UUID): BigDecimal = economy.getBalance(uuid).await()
 
-    suspend fun setBalance(uuid: UUID, amount: BigDecimal): EconomyResult<BalanceChange> = economy.setBalance(uuid, amount).await()
+    suspend fun setBalance(uuid: UUID, amount: BigDecimal): TransactionResult<Action.Set> = economy.setBalance(uuid, amount).await()
 
-    suspend fun withdraw(uuid: UUID, amount: BigDecimal): EconomyResult<BalanceChange> = economy.withdraw(uuid, amount).await()
+    suspend fun withdraw(uuid: UUID, amount: BigDecimal): TransactionResult<Action.Withdraw> = economy.withdraw(uuid, amount).await()
 
-    suspend fun deposit(uuid: UUID, amount: BigDecimal): EconomyResult<BalanceChange> = economy.deposit(uuid, amount).await()
+    suspend fun deposit(uuid: UUID, amount: BigDecimal): TransactionResult<Action.Deposit> = economy.deposit(uuid, amount).await()
 
-    suspend fun transfer(from: UUID, to: UUID, amount: BigDecimal): EconomyResult<Transfer> = economy.transfer(from, to, amount).await()
+    suspend fun transfer(from: UUID, to: UUID, amount: BigDecimal): TransactionResult<Action.Transfer> = economy.transfer(from, to, amount).await()
 
-    suspend fun getAccounts(): EconomyResult<List<PlayerBalance>> = economy.getAccounts().await()
+    suspend fun getAccounts(): List<PlayerBalance> = economy.getAccounts().await()
 
-    suspend fun getTopAccounts(limit: Int, page: Int): EconomyResult<List<PlayerBalance>> = economy.getTopAccounts(limit, page).await()
+    suspend fun getTopAccounts(limit: Int, page: Int): List<PlayerBalance> = economy.getTopAccounts(limit, page).await()
 }
 
 /**
@@ -45,5 +41,5 @@ class EconomySuspendAdapter(private val economy: PlayerEconomy) {
  * @see fi.sulku.hytale.economy.adapters.EconomySuspendAdapter
  * @return EconomySuspend
  */
-@JvmSynthetic
+//@JvmSynthetic todo
 fun PlayerEconomy.asCoroutine(): EconomySuspendAdapter = EconomySuspendAdapter(this)

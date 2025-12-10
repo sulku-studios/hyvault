@@ -69,7 +69,7 @@ interface PlayerEconomy {
      * @param uuid of the player
      * @return future with true/false
      */
-    fun createAccount(uuid: UUID): CompletableFuture<EconomyResult<Boolean>>
+    fun createAccount(uuid: UUID): CompletableFuture<Boolean>
 
     /**
      * Checks if the user has account on the server yet.
@@ -78,7 +78,7 @@ interface PlayerEconomy {
      * @param uuid of the player
      *@return future with true/false
      */
-    fun hasAccount(uuid: UUID): CompletableFuture<EconomyResult<Boolean>>
+    fun hasAccount(uuid: UUID): CompletableFuture<Boolean>
 
     /**
      * Gets the balance of the player.
@@ -87,7 +87,7 @@ interface PlayerEconomy {
      *
      *  @return future for current balance
      */
-    fun getBalance(uuid: UUID): CompletableFuture<EconomyResult<BigDecimal>>
+    fun getBalance(uuid: UUID): CompletableFuture<BigDecimal>
 
     /**
      * Sets the user balance.
@@ -96,7 +96,7 @@ interface PlayerEconomy {
      *
      * @return future for economy result
      */
-    fun setBalance(uuid: UUID, amount: BigDecimal): CompletableFuture<EconomyResult<BalanceChange>>
+    fun setBalance(uuid: UUID, amount: BigDecimal): CompletableFuture<TransactionResult<Action.Set>>
 
     /**
      * @param amount to deposit
@@ -104,7 +104,7 @@ interface PlayerEconomy {
      *
      * @return future for economy result
      */
-    fun deposit(uuid: UUID, amount: BigDecimal): CompletableFuture<EconomyResult<BalanceChange>>
+    fun deposit(uuid: UUID, amount: BigDecimal): CompletableFuture<TransactionResult<Action.Deposit>>
 
     /**
      * Withdraw amount from the player.
@@ -114,7 +114,7 @@ interface PlayerEconomy {
      *
      * @return future for economy result
      */
-    fun withdraw(uuid: UUID, amount: BigDecimal): CompletableFuture<EconomyResult<BalanceChange>>
+    fun withdraw(uuid: UUID, amount: BigDecimal): CompletableFuture<TransactionResult<Action.Withdraw>>
 
     /**
      * Transfer amount from 1 player to another.
@@ -125,14 +125,14 @@ interface PlayerEconomy {
      *
      * @return future for economy result
      */
-    fun transfer(from: UUID, to: UUID, amount: BigDecimal): CompletableFuture<EconomyResult<Transfer>>
+    fun transfer(from: UUID, to: UUID, amount: BigDecimal): CompletableFuture<TransactionResult<Action.Transfer>>
 
     /**
      *
      *
      * @return future with List<PlayerBalance> containing all balances
      */
-    fun getAccounts(): CompletableFuture<EconomyResult<List<PlayerBalance>>>
+    fun getAccounts(): CompletableFuture<List<PlayerBalance>>
 
     /**
      *
@@ -141,7 +141,9 @@ interface PlayerEconomy {
      *
      * @return future of the top account balances
      */
-    fun getTopAccounts(limit: Int, page: Int): CompletableFuture<EconomyResult<List<PlayerBalance>>>
+    fun getTopAccounts(limit: Int, page: Int): CompletableFuture<List<PlayerBalance>>
+
+    //todo saveSnapshot
 
     /**
      * Wrap the class with synchronized calls, minecraft style
