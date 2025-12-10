@@ -1,0 +1,7 @@
+main: fi.sulku.hytale.economy.HyVaultPlugin
+name: hyvault
+prefix: hyvault
+version: 1.0
+description: aa
+load: POSTWORLD
+api-version: 1.20.4
