@@ -4,6 +4,11 @@ plugins {
     alias(libs.plugins.kotlin.jvm) apply false
     alias(libs.plugins.shadow) apply false
     alias(libs.plugins.kotlin.serialization) apply false
+    //todo temp here?
+    alias(libs.plugins.composeMultiplatform) apply false
+    alias(libs.plugins.composeCompiler) apply false
+    alias(libs.plugins.kotlinMultiplatform) apply false
+
 }
 
 allprojects {
@@ -17,11 +22,22 @@ allprojects {
 }
 
 subprojects {
-    apply(plugin = "org.jetbrains.kotlin.jvm")
-    apply(plugin = "maven-publish")
+    if (name != "hyvault-web") {
+        apply(plugin = "maven-publish")
+        apply(plugin = "org.jetbrains.kotlin.jvm")
+        configure<KotlinJvmProjectExtension> {
+            jvmToolchain(21)
+        }
 
-    configure<KotlinJvmProjectExtension> {
-        jvmToolchain(25)
+        afterEvaluate {
+            configure<PublishingExtension> {
+                publications {
+                    create<MavenPublication>("maven") {
+                        from(components["java"])
+                    }
+                }
+            }
+        }
     }
 
     tasks.withType<Test> {
@@ -29,16 +45,7 @@ subprojects {
     }
 
     dependencies {
-        add("testImplementation", kotlin("test"))
+        // add("testImplementation", kotlin("test"))
     }
 
-    afterEvaluate {
-        configure<PublishingExtension> {
-            publications {
-                create<MavenPublication>("maven") {
-                    from(components["java"])
-                }
-            }
-        }
-    }
 }

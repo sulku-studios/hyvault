@@ -1,4 +1,5 @@
 rootProject.name = "hyvault"
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {
     repositories {
@@ -13,3 +14,4 @@ plugins {
 
 include("hyvault-api")
 include("hyvault-plugin")
+include(":hyvault-web")
